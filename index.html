@@ -1397,6 +1397,33 @@ const STORAGE_KEYS = Object.freeze({
   scrollPosition: 'so_scroll_position'
 });
 const PLIK = APP_CONFIG.excelUrl;
+function getExcelSources() {
+  const sources = [];
+  const rawUrl = String(PLIK || '').trim();
+  const match = rawUrl.match(/^https:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)\/(.+)$/i);
+  if (match) {
+    const [, owner, repository, , encodedPath] = match;
+    if (/^https?:$/.test(location.protocol)) sources.push(new URL(encodedPath, location.href).href);
+    sources.push(`https://${owner.toLowerCase()}.github.io/${repository}/${encodedPath}`);
+  }
+  if (rawUrl) sources.push(rawUrl);
+  return [...new Set(sources)];
+}
+
+async function fetchExcelBuffer() {
+  const failures = [];
+  for (const source of getExcelSources()) {
+    try {
+      const separator = source.includes('?') ? '&' : '?';
+      const response = await fetch(`${source}${separator}v=${Date.now()}`, {cache:'no-store'});
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return await response.arrayBuffer();
+    } catch (error) {
+      failures.push(`${source} (${error?.message || 'błąd połączenia'})`);
+    }
+  }
+  throw new Error(`Nie udało się pobrać pliku Excel z dostępnych źródeł. ${failures.join(' · ')}`);
+}
 const REPO_BASE = APP_CONFIG.repositoryBase;
 const REVIEW_PRODUCT = APP_CONFIG.productName;
 const REVIEW_FORM_TOKEN = 'WSG_OPINIA_2026_V1';
@@ -3559,8 +3586,7 @@ function restoreSavedPlace() {
 
 function loadExcel() {
   showLoadingState();
-  fetch(PLIK, {cache:'no-store'})
-    .then(r => { if (!r.ok) throw new Error('Nie znaleziono pliku Excel'); return r.arrayBuffer(); })
+  fetchExcelBuffer()
     .then(buf => {
       const wb = XLSX.read(buf, {type:'array'});
       if (!wb.SheetNames.length) throw new Error('Plik Excel nie zawiera żadnego arkusza');
