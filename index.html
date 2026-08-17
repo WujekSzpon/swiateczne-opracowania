@@ -1366,7 +1366,7 @@ const HASLO_HASH = '63ecfe6e439abcd7f11d5834eceb7215b1fc63324d8fda108dd9fbac47e9
 const APP_CONFIG = Object.freeze({
   version: '2026.08.17',
   excelUrl: 'https://raw.githubusercontent.com/WujekSzpon/swiateczne-opracowania/main/KONSPEKT%20-%20%C5%9AWI%C4%84TECZNE.xlsx',
-  repositoryBase: 'https://raw.githubusercontent.com/WujekSzpon/swiateczne-opracowania/main',
+  repositoryBase: 'https://wujekszpon.github.io/swiateczne-opracowania',
   productName: 'Świąteczne Opracowania',
   contactEmail: 'tomaszczerniuk@gmail.com',
   reviewAppsScriptUrl: 'https://script.google.com/macros/s/AKfycbwvWlBF6u7UxVi5vCulYTtm_Z_gumekiDf_SJvlfJndHgIMjWGXsNYb0Vg6zGDa1XF_/exec',
@@ -2523,8 +2523,8 @@ let reviewPhotoDrag = null;
 let reviewFormOpenedAt = Date.now();
 let reviewAvatarStyle = 'male';
 const REVIEW_AVATAR_URLS = Object.freeze({
-  male: 'https://raw.githubusercontent.com/WujekSzpon/wspolne-materialy/main/avatary/review-rock-avatar-female-male.jpg',
-  female: 'https://raw.githubusercontent.com/WujekSzpon/wspolne-materialy/main/avatary/review-rock-avatar-female.png'
+  male: 'https://wujekszpon.github.io/wspolne-materialy/avatary/review-rock-avatar-female-male.jpg',
+  female: 'https://wujekszpon.github.io/wspolne-materialy/avatary/review-rock-avatar-female.png'
 });
 const reviewAvatarImages = { male: null, female: null };
 
@@ -4112,7 +4112,7 @@ async function exportCatalogPreview() {
 // ===== TESTOWY EKSPORT KATALOGU PDF — koniec =====
 
 // POPUPY: porady zachowują stary wygląd, a promocje korzystają ze wspólnej bazy i panelu graficznego.
-const SHARED_MATERIALS_BASE = 'https://raw.githubusercontent.com/WujekSzpon/wspolne-materialy/main';
+const SHARED_MATERIALS_BASE = 'https://wujekszpon.github.io/wspolne-materialy';
 const PROMOTIONS_URL = `${SHARED_MATERIALS_BASE}/promotions/promotions.xlsx`;
 const PROMOTION_CONTEXT = 'swiateczne';
 let PORADY = [], PROMOTIONS = [], tipRandomBag = [], promotionRandomBag = [], lastTipIndex = -1, lastPromotionIndex = -1, popupTimeout, promotionTimeout;
@@ -4153,7 +4153,7 @@ function nextRandomPromotion() {
   return PROMOTIONS[lastPromotionIndex];
 }
 
-const tipsDataPromise = fetch('https://raw.githubusercontent.com/WujekSzpon/najlepsze-polskie-riffy/main/data/tresci.txt')
+const tipsDataPromise = fetch('https://wujekszpon.github.io/najlepsze-polskie-riffy/data/tresci.txt')
   .then(r => r.ok ? r.text() : Promise.reject(new Error(`HTTP ${r.status}`)))
   .then(text => {
     const ps = text.split('REKLAMY:')[0].replace('PORADY:', '').trim();
