@@ -483,12 +483,12 @@ body.cards-mini .card-title{font-size:calc(12px * var(--card-title-scale));margi
 .artists-single-toggle .option-row{min-height:36px;border:0;font-size:12px;}
 .artists-help{margin-top:5px;color:#888;font-size:10.5px;line-height:1.45;}
 #artists-choices{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.artist-choice{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;border:1px solid #333;border-radius:7px;background:#151515;color:#ccc;padding:9px 10px;font:600 12px 'Open Sans',sans-serif;cursor:pointer;text-align:left;}
-.artist-choice:hover,.artist-choice:focus-visible{border-color:#777;color:#fff;outline:none;}
-.artist-choice.active{border-color:var(--accent);color:var(--accent);background:rgba(255,204,0,.09);}
+.artist-choice{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;border:1px solid color-mix(in srgb,var(--choice-color,#777) 62%,#333);border-radius:7px;background:color-mix(in srgb,var(--choice-bg,#151515) 24%,#151515);color:#fff;padding:9px 10px;font:700 12px 'Open Sans',sans-serif;cursor:pointer;text-align:left;text-shadow:0 1px 2px rgba(0,0,0,.78);box-shadow:0 0 7px color-mix(in srgb,var(--choice-color,#777) 18%,transparent);transition:border-color .18s ease,background .18s ease,box-shadow .18s ease,transform .18s ease;}
+.artist-choice:hover,.artist-choice:focus-visible{border-color:var(--choice-color,#fff);background:color-mix(in srgb,var(--choice-bg,#222) 45%,#151515);color:#fff;box-shadow:0 0 12px color-mix(in srgb,var(--choice-color,#fff) 38%,transparent);outline:none;}
+.artist-choice.active{border:2px solid var(--choice-color,var(--accent));color:#fff;background:var(--choice-bg,#5f4d00);box-shadow:0 0 14px color-mix(in srgb,var(--choice-color,var(--accent)) 58%,transparent),inset 0 0 8px rgba(255,255,255,.08);transform:translateY(-1px);}
 .artist-choice-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.artist-choice-count{flex:0 0 auto;color:#888;font-size:10px;font-weight:700;}
-.artist-choice.active .artist-choice-count{color:#d7b300;}
+.artist-choice-count{flex:0 0 auto;color:rgba(255,255,255,.7);font-size:10px;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.9);}
+.artist-choice.active .artist-choice-count{color:#fff;}
 .artists-empty{grid-column:1/-1;color:#888;font-size:12px;text-align:center;padding:18px 8px;}
 .artists-actions{display:grid;grid-template-columns:1fr 1.5fr;gap:8px;margin-top:13px;}
 .artists-actions button{min-height:40px;border-radius:7px;font:700 12px 'Open Sans',sans-serif;cursor:pointer;}
@@ -3810,6 +3810,8 @@ function renderArtistChoices() {
     button.type = 'button';
     button.className = `artist-choice${selected ? ' active' : ''}`;
     button.setAttribute('aria-pressed', String(selected));
+    button.style.setProperty('--choice-color', arrangementColor(arrangement));
+    button.style.setProperty('--choice-bg', arrangementTagColor(arrangement));
     const name = document.createElement('span');
     name.className = 'artist-choice-name';
     name.textContent = arrangement;
