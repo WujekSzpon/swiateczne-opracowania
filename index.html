@@ -580,7 +580,9 @@ body.cards-mini .card-title{font-size:calc(12px * var(--card-title-scale));margi
 .card-tag{font-size:calc(9px * var(--card-tag-scale));padding:1px 6px;border-radius:99px;background:#222;color:#aaa;border:1px solid #333;}
 .card-tag-new{background:#d71920;color:#fff;border-color:#ff5a5f;font-weight:800;letter-spacing:.06em;box-shadow:0 0 8px rgba(215,25,32,.45);}
 .card-arrangement{display:flex;width:100%;margin-top:9px;padding-top:9px;border-top:1px solid var(--border);}
-.card-arrangement-badge{display:flex;align-items:center;justify-content:center;width:100%;min-height:30px;box-sizing:border-box;padding:5px 12px;border:1.5px solid var(--accent);border-radius:8px;background:rgba(255,204,0,.09);color:var(--accent);font-size:calc(10px * var(--card-tag-scale));font-weight:800;line-height:1.25;letter-spacing:.055em;text-align:center;text-transform:uppercase;box-shadow:0 0 9px rgba(255,204,0,.18);}
+.card.arrangement-card{border-color:var(--arrangement-color);box-shadow:0 0 10px color-mix(in srgb,var(--arrangement-color) 36%,transparent),inset 0 0 5px color-mix(in srgb,var(--arrangement-color) 8%,transparent);}
+.card.arrangement-card:hover{border-color:var(--arrangement-color);box-shadow:0 0 16px color-mix(in srgb,var(--arrangement-color) 56%,transparent),inset 0 0 7px color-mix(in srgb,var(--arrangement-color) 11%,transparent);}
+.card-arrangement-badge{display:flex;align-items:center;justify-content:center;width:100%;min-height:33px;box-sizing:border-box;padding:6px 12px;border:2px solid var(--arrangement-color,var(--accent));border-radius:8px;background:var(--arrangement-color,var(--accent));color:var(--arrangement-text-color,#111);font-size:calc(12px * var(--card-tag-scale));font-weight:900;line-height:1.25;letter-spacing:.06em;text-align:center;text-transform:uppercase;box-shadow:0 0 11px color-mix(in srgb,var(--arrangement-color,var(--accent)) 48%,transparent);}
 .card-arrangement + .card-tags{margin-top:9px;padding-top:8px;}
 #card-preview-tags .card-arrangement-badge{flex:1 0 100%;}
 .card-icon-btn{position:absolute;z-index:3;width:35px;width:8.61cqw;height:35px;height:8.61cqw;display:flex;align-items:center;justify-content:center;padding:0;border:2.5px solid currentColor;border-width:.64cqw;border-radius:50%;background:rgba(5,5,5,.72);color:var(--card-icon-light);cursor:pointer;box-shadow:0 0 5.25px rgba(211,211,211,.23),inset 0 0 6px rgba(211,211,211,.045);transition:transform .16s ease,box-shadow .16s ease,background .16s ease,color .16s ease;}
@@ -708,7 +710,8 @@ header,#toolbar-wrap{background:rgba(7,20,14,.96);backdrop-filter:blur(8px);}
   body.print-catalog .card-title{font-size:11pt !important;color:#fff !important;}
   body.print-catalog .card-desc{display:-webkit-box !important;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;font-size:8pt !important;color:#bbb !important;}
   body.print-catalog .card-arrangement{display:flex !important;border-color:#333 !important;}
-  body.print-catalog .card-arrangement-badge{min-height:7mm !important;color:var(--accent) !important;border-color:var(--accent) !important;background:rgba(255,204,0,.08) !important;box-shadow:none !important;}
+  body.print-catalog .card.arrangement-card{border-color:var(--arrangement-color) !important;box-shadow:none !important;}
+  body.print-catalog .card-arrangement-badge{min-height:7mm !important;color:var(--arrangement-text-color,#111) !important;border-color:var(--arrangement-color,var(--accent)) !important;background:var(--arrangement-color,var(--accent)) !important;box-shadow:none !important;}
   body.print-catalog .card-tags{display:flex !important;max-height:16mm;overflow:hidden;border-color:#333 !important;}
   body.print-catalog .card-tag{color:#aaa !important;background:#222 !important;border-color:#3a3a3a !important;}
   body.print-catalog .card-tag-new{color:#fff !important;background:#d71920 !important;border-color:#d71920 !important;}
@@ -1446,6 +1449,23 @@ function difficultyStars(l) {
   return `<span class="difficulty-stars ${level.cls}" aria-label="${lo}: ${level.count} z 5 gwiazdek">${stars}</span>`;
 }
 
+const ARRANGEMENT_COLORS = Object.freeze({
+  'SOLO': '#ff0000',
+  'MELODIA': '#b500ff',
+  'AKORDY': '#39ff14',
+  'AKORDOWE': '#39ff14',
+  'NA JEDNEJ STRUNIE': '#00ff9c',
+  'FINGERSTYLE': '#006dff'
+});
+
+function arrangementColor(arrangement) {
+  return ARRANGEMENT_COLORS[String(arrangement || '').toUpperCase().trim()] || '#ffcc00';
+}
+
+function arrangementTextColor(arrangement) {
+  return ['AKORDY', 'AKORDOWE', 'NA JEDNEJ STRUNIE'].includes(String(arrangement || '').toUpperCase().trim()) ? '#07110b' : '#fff';
+}
+
 let exercises = [];
 let rawExcelRows = [];
 let dataValidationIssues = [];
@@ -2027,7 +2047,7 @@ function openCardPreview(id) {
   description.textContent = entry.opis || '';
   description.style.display = entry.opis ? 'block' : 'none';
   const tags = document.getElementById('card-preview-tags');
-  tags.innerHTML = `${entry.rodzaj ? `<span class="card-arrangement-badge">${entry.rodzaj}</span>` : ''}${isNewEntry(entry.data) ? '<span class="card-tag card-tag-new">NEW!</span>' : ''}${entry.tagi.map(tag => `<span class="card-tag">${tag}</span>`).join('')}`;
+  tags.innerHTML = `${entry.rodzaj ? `<span class="card-arrangement-badge" style="--arrangement-color:${arrangementColor(entry.rodzaj)};--arrangement-text-color:${arrangementTextColor(entry.rodzaj)};">${entry.rodzaj}</span>` : ''}${isNewEntry(entry.data) ? '<span class="card-tag card-tag-new">NEW!</span>' : ''}${entry.tagi.map(tag => `<span class="card-tag">${tag}</span>`).join('')}`;
   tags.style.display = tags.innerHTML ? 'flex' : 'none';
   setPreviewFavoriteButton(id);
 
@@ -3697,9 +3717,10 @@ function render() {
     const regularTags = e.tagi.map(t=>`<span class="card-tag">${t}</span>`).join('');
     const tagsDiv = (newTag || regularTags) ? `<div class="card-tags">${newTag}${regularTags}</div>` : '';
     const arrangementBadge = e.rodzaj ? `<div class="card-arrangement"><span class="card-arrangement-badge">${e.rodzaj}</span></div>` : '';
+    const arrangementStyle = e.rodzaj ? `--arrangement-color:${arrangementColor(e.rodzaj)};--arrangement-text-color:${arrangementTextColor(e.rodzaj)};` : '';
 
     return `
-      <a class="card" data-nav-letter="${normalizeSearchText(e.nazwa).charAt(0)}" data-nav-name="${encodeURIComponent(e.nazwa)}" href="${e.link}" target="_blank" rel="noopener" onclick="return handleCardClick(event,${e.id})" style="position:relative;">
+      <a class="card${e.rodzaj ? ' arrangement-card' : ''}" data-nav-letter="${normalizeSearchText(e.nazwa).charAt(0)}" data-nav-name="${encodeURIComponent(e.nazwa)}" href="${e.link}" target="_blank" rel="noopener" onclick="return handleCardClick(event,${e.id})" style="position:relative;${arrangementStyle}">
         ${favBtn}${ytBtn}
         <div class="thumb ${starsHtml ? 'has-stars' : ''}" style="background:#1a1a2e;">${thumb}${starsHtml}</div>
         <div class="card-body">
