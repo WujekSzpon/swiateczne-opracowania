@@ -18,10 +18,10 @@
   ],
   "icons": [
     {
-      "src": "./icon-swiateczne.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "./branding/swiateczne-opracowania-kwadrat.png",
+      "sizes": "1000x1000",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

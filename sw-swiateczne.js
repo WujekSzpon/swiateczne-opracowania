@@ -1,8 +1,8 @@
-const CACHE_NAME = 'swiateczne-opracowania-v1';
+const CACHE_NAME = 'swiateczne-opracowania-v2';
 const APP_SHELL = [
   './',
   './manifest-swiateczne.webmanifest',
-  './icon-swiateczne.svg'
+  './branding/swiateczne-opracowania-kwadrat.png'
 ];
 
 self.addEventListener('install', event => {
