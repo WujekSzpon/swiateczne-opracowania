@@ -321,7 +321,7 @@ body.hide-stars .difficulty-stars{display:none;}
 body.hide-stars .thumb.has-stars::after{display:none;}
 body.hide-thumbnails .thumb{display:none;}
 body.hide-thumbnails .card>button{display:none !important;}
-body.cards-mini .card-desc,body.cards-mini .card-tags,body.cards-mini .difficulty-stars{display:none !important;}
+body.cards-mini .card-desc,body.cards-mini .card-arrangement,body.cards-mini .card-tags,body.cards-mini .difficulty-stars{display:none !important;}
 body.cards-mini .thumb.has-stars::after{display:none;}
 body.cards-mini .card>button{display:none !important;}
 body.cards-mini .card-body{padding:8px 7px 9px;}
@@ -579,6 +579,10 @@ body.cards-mini .card-title{font-size:calc(12px * var(--card-title-scale));margi
 .card-tags{display:flex;flex-wrap:wrap;gap:3px;margin-top:8px;padding-top:7px;border-top:1px solid var(--border);justify-content:center;}
 .card-tag{font-size:calc(9px * var(--card-tag-scale));padding:1px 6px;border-radius:99px;background:#222;color:#aaa;border:1px solid #333;}
 .card-tag-new{background:#d71920;color:#fff;border-color:#ff5a5f;font-weight:800;letter-spacing:.06em;box-shadow:0 0 8px rgba(215,25,32,.45);}
+.card-arrangement{display:flex;width:100%;margin-top:9px;padding-top:9px;border-top:1px solid var(--border);}
+.card-arrangement-badge{display:flex;align-items:center;justify-content:center;width:100%;min-height:30px;box-sizing:border-box;padding:5px 12px;border:1.5px solid var(--accent);border-radius:8px;background:rgba(255,204,0,.09);color:var(--accent);font-size:calc(10px * var(--card-tag-scale));font-weight:800;line-height:1.25;letter-spacing:.055em;text-align:center;text-transform:uppercase;box-shadow:0 0 9px rgba(255,204,0,.18);}
+.card-arrangement + .card-tags{margin-top:9px;padding-top:8px;}
+#card-preview-tags .card-arrangement-badge{flex:1 0 100%;}
 .card-icon-btn{position:absolute;z-index:3;width:35px;width:8.61cqw;height:35px;height:8.61cqw;display:flex;align-items:center;justify-content:center;padding:0;border:2.5px solid currentColor;border-width:.64cqw;border-radius:50%;background:rgba(5,5,5,.72);color:var(--card-icon-light);cursor:pointer;box-shadow:0 0 5.25px rgba(211,211,211,.23),inset 0 0 6px rgba(211,211,211,.045);transition:transform .16s ease,box-shadow .16s ease,background .16s ease,color .16s ease;}
 .card-icon-btn i{font-size:21px;font-size:5.67cqw;filter:drop-shadow(0 .45cqw .45cqw rgba(0,0,0,.95)) drop-shadow(0 0 .375cqw rgba(211,211,211,.72));}
 .card-icon-btn:hover,.card-icon-btn:focus-visible{transform:scale(1.08);color:#ededed;background:rgba(211,211,211,.12);box-shadow:0 0 11px rgba(211,211,211,.43),inset 0 0 7px rgba(211,211,211,.07);outline:none;}
@@ -703,6 +707,8 @@ header,#toolbar-wrap{background:rgba(7,20,14,.96);backdrop-filter:blur(8px);}
   body.print-catalog .card-body{padding:3mm !important;}
   body.print-catalog .card-title{font-size:11pt !important;color:#fff !important;}
   body.print-catalog .card-desc{display:-webkit-box !important;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden;font-size:8pt !important;color:#bbb !important;}
+  body.print-catalog .card-arrangement{display:flex !important;border-color:#333 !important;}
+  body.print-catalog .card-arrangement-badge{min-height:7mm !important;color:var(--accent) !important;border-color:var(--accent) !important;background:rgba(255,204,0,.08) !important;box-shadow:none !important;}
   body.print-catalog .card-tags{display:flex !important;max-height:16mm;overflow:hidden;border-color:#333 !important;}
   body.print-catalog .card-tag{color:#aaa !important;background:#222 !important;border-color:#3a3a3a !important;}
   body.print-catalog .card-tag-new{color:#fff !important;background:#d71920 !important;border-color:#d71920 !important;}
@@ -737,18 +743,18 @@ header,#toolbar-wrap{background:rgba(7,20,14,.96);backdrop-filter:blur(8px);}
 <div id="toolbar-wrap">
   <div id="toolbar-panel">
    <div class="toolbar" id="toolbar">
-    <input type="text" id="search" placeholder="🔍 Szukaj" title="Skrót: Shift + Spacja" aria-label="Szukaj utworu lub wykonawcy" oninput="render()">
+    <input type="text" id="search" placeholder="🔍 Szukaj" title="Skrót: Shift + Spacja" aria-label="Szukaj utworu lub rodzaju opracowania" oninput="render()">
     <select id="sort" aria-label="Sortowanie" onchange="render()">
       <option value="">Sortowanie</option>
       <option value="song_az">Utwór A → Z</option>
       <option value="song_za">Utwór Z → A</option>
-      <option value="artist_az">Wykonawca A → Z</option>
-      <option value="artist_za">Wykonawca Z → A</option>
+      <option value="arrangement_az">Rodzaj opracowania A → Z</option>
+      <option value="arrangement_za">Rodzaj opracowania Z → A</option>
       <option value="lvl_asc">Łatwe → Trudne</option>
       <option value="lvl_desc">Trudne → Łatwe</option>
       <option value="fav">♥ Ulubione</option>
     </select>
-    <button class="toolbar-select-button" id="artists-btn" type="button" onclick="openArtistsPanel()" aria-label="Wybierz jednego lub kilku wykonawców" aria-expanded="false" aria-controls="artists-dropdown"><span id="artists-btn-label">Wybierz wykonawcę</span><i class="ti ti-chevron-down" aria-hidden="true"></i></button>
+    <button class="toolbar-select-button" id="artists-btn" type="button" onclick="openArtistsPanel()" aria-label="Wybierz jeden lub kilka rodzajów opracowania" aria-expanded="false" aria-controls="artists-dropdown"><span id="artists-btn-label">Wybierz rodzaj opracowania</span><i class="ti ti-chevron-down" aria-hidden="true"></i></button>
     <input id="kat" type="hidden" value="">
     <select id="lvl" aria-label="Poziom trudności" onchange="render()">
       <option value="">Poziom trudności</option>
@@ -805,14 +811,10 @@ header,#toolbar-wrap{background:rgba(7,20,14,.96);backdrop-filter:blur(8px);}
   <div id="artists-backdrop" onclick="closeArtistsPanel()"></div>
   <div id="artists-panel" tabindex="-1">
     <div class="artists-panel-header">
-      <span class="artists-panel-title" id="artists-panel-title">Wybierz wykonawców</span>
-      <button class="options-close" type="button" onclick="closeArtistsPanel()" aria-label="Zamknij wybór wykonawców">✕</button>
+      <span class="artists-panel-title" id="artists-panel-title">Wybierz rodzaje opracowania</span>
+      <button class="options-close" type="button" onclick="closeArtistsPanel()" aria-label="Zamknij wybór rodzajów opracowania">✕</button>
     </div>
-    <input class="artists-search" id="artists-search" type="search" placeholder="Szukaj wykonawcy…" aria-label="Szukaj wykonawcy" oninput="renderArtistChoices()">
-    <div class="artists-single-toggle">
-      <div class="option-row"><span>Pokazuj także wykonawców z jednym opracowaniem</span><label class="option-switch"><input id="artists-show-single" type="checkbox" onchange="setShowSinglePerformers(this.checked)"><span class="option-slider"></span></label></div>
-      <div class="artists-help">Domyślnie lista zawiera wykonawców mających co najmniej dwa opracowania.</div>
-    </div>
+    <input class="artists-search" id="artists-search" type="search" placeholder="Szukaj rodzaju opracowania…" aria-label="Szukaj rodzaju opracowania" oninput="renderArtistChoices()">
     <div id="artists-choices"></div>
     <div class="artists-actions"><button class="artists-clear" type="button" onclick="clearPerformers()">WYCZYŚĆ</button><button class="artists-apply" type="button" onclick="closeArtistsPanel()">ZASTOSUJ</button></div>
   </div>
@@ -1006,7 +1008,7 @@ header,#toolbar-wrap{background:rgba(7,20,14,.96);backdrop-filter:blur(8px);}
           <div class="guide-toolbar-fields">
             <div class="guide-ui-field"><i class="ti ti-search"></i> Szukaj</div>
             <div class="guide-ui-field">Sortowanie <i class="ti ti-chevron-down"></i></div>
-            <div class="guide-ui-field">Wybierz wykonawców <i class="ti ti-chevron-down"></i></div>
+            <div class="guide-ui-field">Rodzaj opracowania <i class="ti ti-chevron-down"></i></div>
             <div class="guide-ui-field">Poziom trudności <i class="ti ti-chevron-down"></i></div>
           </div>
           <div class="guide-toolbar-actions">
@@ -1020,9 +1022,9 @@ header,#toolbar-wrap{background:rgba(7,20,14,.96);backdrop-filter:blur(8px);}
           </div>
         </div>
         <div class="guide-step-grid">
-          <div class="guide-step-card"><span class="guide-step-number">1</span><strong>Szukaj</strong>Wpisz tytuł opracowań albo wykonawcę. Wyszukiwarka działa również bez polskich znaków. <b>Shift + Spacja</b> ustawia kursor w polu.</div>
-          <div class="guide-step-card"><span class="guide-step-number">2</span><strong>Sortowanie</strong>Ułóż opracowania alfabetycznie, według wykonawcy lub trudności. Możesz też pokazać tylko nowości albo ulubione. Domyślnie nowe opracowania znajdują się na początku.</div>
-          <div class="guide-step-card"><span class="guide-step-number">3</span><strong>Filtry</strong>Zaznacz jednego lub kilku wykonawców, wybierz poziom trudności oraz tagi. Wszystkie wybrane warunki działają jednocześnie.</div>
+          <div class="guide-step-card"><span class="guide-step-number">1</span><strong>Szukaj</strong>Wpisz tytuł utworu albo rodzaj opracowania. Wyszukiwarka działa również bez polskich znaków. <b>Shift + Spacja</b> ustawia kursor w polu.</div>
+          <div class="guide-step-card"><span class="guide-step-number">2</span><strong>Sortowanie</strong>Ułóż opracowania alfabetycznie, według rodzaju opracowania lub trudności. Możesz też pokazać tylko nowości albo ulubione. Domyślnie nowe opracowania znajdują się na początku.</div>
+          <div class="guide-step-card"><span class="guide-step-number">3</span><strong>Filtry</strong>Zaznacz jeden lub kilka rodzajów opracowania, wybierz poziom trudności oraz tagi. Wszystkie wybrane warunki działają jednocześnie.</div>
         </div>
         <div class="guide-icon-grid" aria-label="Opis przycisków paska sterowania">
           <div class="guide-icon-card pink"><i class="ti ti-heart"></i><strong>Ulubione</strong>Pokazuje wyłącznie opracowania zapisane sercem w tej przeglądarce.</div>
@@ -1102,9 +1104,9 @@ header,#toolbar-wrap{background:rgba(7,20,14,.96);backdrop-filter:blur(8px);}
       <div class="guide-section-title">1. Górny panel — wyszukiwanie, sortowanie i filtry</div>
       <p class="guide-section-copy">Panel na górze strony służy do zawężania listy. Kilka filtrów może działać jednocześnie, a ich ustawienie wpływa również na eksport.</p>
       <div class="guide-grid">
-        <div class="guide-card"><strong>🔍 Szukaj</strong>Wpisz tytuł utworu lub nazwę wykonawcy. Wyszukiwarka rozpoznaje również zapytania wpisane bez polskich znaków. Skrót <b>Shift + Spacja</b> przenosi kursor od razu do wyszukiwarki.</div>
-        <div class="guide-card"><strong>Sortowanie</strong>Ułóż utwory według tytułu, wykonawcy, poziomu trudności albo pokaż ulubione. Domyślnie nowe opracowania są przez 30 dni wyświetlane najpierw, a obie grupy są ułożone alfabetycznie.</div>
-        <div class="guide-card"><strong>Wykonawcy i poziom trudności</strong>Możesz wybrać kilku wykonawców jednocześnie oraz poziom od początkującego do eksperta. Domyślnie lista pokazuje wykonawców z co najmniej dwoma opracowaniami, ale w oknie wyboru możesz włączyć również wykonawców posiadających jedno opracowanie.</div>
+        <div class="guide-card"><strong>🔍 Szukaj</strong>Wpisz tytuł utworu lub rodzaj opracowania. Wyszukiwarka rozpoznaje również zapytania wpisane bez polskich znaków. Skrót <b>Shift + Spacja</b> przenosi kursor od razu do wyszukiwarki.</div>
+        <div class="guide-card"><strong>Sortowanie</strong>Ułóż utwory według tytułu, rodzaju opracowania, poziomu trudności albo pokaż ulubione. Domyślnie nowe opracowania są przez 30 dni wyświetlane najpierw, a obie grupy są ułożone alfabetycznie.</div>
+        <div class="guide-card"><strong>Rodzaj opracowania i poziom trudności</strong>Możesz wybrać kilka rodzajów opracowania jednocześnie oraz poziom od początkującego do eksperta. Rodzaj opracowania jest również widoczny jako szeroki tag na każdej karcie.</div>
         <div class="guide-card"><strong>TAGI</strong>Połącz kilka cech, np. technikę gry lub rodzaj akordów. Licznik przy przycisku pokazuje liczbę aktywnych tagów.</div>
         <div class="guide-card"><strong>Lupa i oko</strong>Lupa reguluje wielkość kart lub przywraca tryb automatyczny. Przekreślone oko chowa panel; po zwinięciu użyj paska „KLIKNIJ, ABY ROZWINĄĆ”.</div>
         <div class="guide-card"><strong>PDF, RESET i Opcje</strong>PDF otwiera sposoby eksportu. RESET czyści aktywne filtry i sortowanie. Koło zębate otwiera ustawienia wyglądu, powiadomień, kontaktu i kontroli danych.</div>
@@ -1449,9 +1451,8 @@ let rawExcelRows = [];
 let dataValidationIssues = [];
 let excelLoaded = false;
 let activeTags = new Set();
-let activePerformers = new Set();
-let performerCounts = new Map();
-let showSinglePerformers = localStorage.getItem('so_show_single_performers') === '1';
+let activeArrangements = new Set();
+let arrangementCounts = new Map();
 const savedSize = localStorage.getItem('so_cardsize');
 let cardSize = savedSize ? parseInt(savedSize) : (window.innerWidth <= 640 ? 280 : 440);
 let cardSizeAuto = !savedSize;
@@ -2021,12 +2022,12 @@ function openCardPreview(id) {
   setPreviewCoverImage(image, entry);
 
   document.getElementById('card-preview-stars').innerHTML = difficultyStars(entry.poziom);
-  document.getElementById('card-preview-title').textContent = entry.wykonawca ? `${entry.nazwa} - ${entry.wykonawca}` : entry.nazwa;
+  document.getElementById('card-preview-title').textContent = entry.nazwa;
   const description = document.getElementById('card-preview-description');
   description.textContent = entry.opis || '';
   description.style.display = entry.opis ? 'block' : 'none';
   const tags = document.getElementById('card-preview-tags');
-  tags.innerHTML = `${isNewEntry(entry.data) ? '<span class="card-tag card-tag-new">NEW!</span>' : ''}${entry.tagi.map(tag => `<span class="card-tag">${tag}</span>`).join('')}`;
+  tags.innerHTML = `${entry.rodzaj ? `<span class="card-arrangement-badge">${entry.rodzaj}</span>` : ''}${isNewEntry(entry.data) ? '<span class="card-tag card-tag-new">NEW!</span>' : ''}${entry.tagi.map(tag => `<span class="card-tag">${tag}</span>`).join('')}`;
   tags.style.display = tags.innerHTML ? 'flex' : 'none';
   setPreviewFavoriteButton(id);
 
@@ -3361,7 +3362,7 @@ function songCountLabel(count) {
   return `${count} utworów`;
 }
 
-function performerRiffCountLabel(count) {
+function arrangementCountLabel(count) {
   const lastTwo = count % 100;
   const last = count % 10;
   if (count === 1) return '1 Opracowanie';
@@ -3396,14 +3397,14 @@ function validateExcelRows(rows) {
   rows.forEach((row, index) => {
     const rowNumber = index + 2;
     const title = excelText(row, ['UTWÓR']);
-    const performer = excelText(row, ['WYKONAWCA']);
+    const arrangement = excelText(row, ['RODZAJ OPRACOWANIA', 'Rodzaj opracowania']);
     const link = excelText(row, ['LINK DO DYSKU', 'Link do dysku', 'LINK']);
     const youtube = excelText(row, ['YOUTUBE', 'YT']);
     const level = excelText(row, ['Poziom', 'POZIOM']).toUpperCase();
     const dateValue = excelCell(row, ['DATA', 'Data']);
 
     if (!title) addIssue('error', rowNumber, 'Brak tytułu utworu. Ten wiersz nie zostanie wyświetlony.');
-    if (!performer) addIssue('warning', rowNumber, 'Brak nazwy wykonawcy.');
+    if (!arrangement) addIssue('warning', rowNumber, 'Brak rodzaju opracowania.');
     if (!link) addIssue('error', rowNumber, 'Brak linku do opracowania.');
     else if (!/^https?:\/\//i.test(link)) addIssue('warning', rowNumber, 'Link do opracowania nie wygląda jak pełny adres internetowy.');
     if (!level) addIssue('warning', rowNumber, 'Brak poziomu trudności.');
@@ -3412,8 +3413,8 @@ function validateExcelRows(rows) {
     if (youtube && youtube.toUpperCase() !== 'TAK' && !/^https?:\/\//i.test(youtube)) addIssue('warning', rowNumber, 'Adres YouTube jest nieprawidłowy.');
 
     if (title) {
-      const duplicateKey = `${normalizeSearchText(title)}|${normalizeSearchText(performer)}|${normalizeSearchText(link)}`;
-      if (duplicates.has(duplicateKey)) addIssue('error', rowNumber, `Duplikat pozycji z wiersza ${duplicates.get(duplicateKey)}: ${title}${performer ? ` — ${performer}` : ''}.`);
+      const duplicateKey = `${normalizeSearchText(title)}|${normalizeSearchText(arrangement)}|${normalizeSearchText(link)}`;
+      if (duplicates.has(duplicateKey)) addIssue('error', rowNumber, `Duplikat pozycji z wiersza ${duplicates.get(duplicateKey)}: ${title}${arrangement ? ` — ${arrangement}` : ''}.`);
       else duplicates.set(duplicateKey, rowNumber);
     }
   });
@@ -3548,13 +3549,13 @@ function loadExcel() {
         okladka:cellText(r['OKŁADKA (NAZWA PLIKU)']),
       })).filter(e => e.nazwa);
 
-      // Populate wykonawcy
-      performerCounts = exercises.reduce((counts, exercise) => {
-        if (exercise.wykonawca) counts.set(exercise.wykonawca, (counts.get(exercise.wykonawca) || 0) + 1);
+      // Populate rodzaje opracowania
+      arrangementCounts = exercises.reduce((counts, exercise) => {
+        if (exercise.rodzaj) counts.set(exercise.rodzaj, (counts.get(exercise.rodzaj) || 0) + 1);
         return counts;
       }, new Map());
-      activePerformers.forEach(performer => {
-        if (!performerCounts.has(performer)) activePerformers.delete(performer);
+      activeArrangements.forEach(arrangement => {
+        if (!arrangementCounts.has(arrangement)) activeArrangements.delete(arrangement);
       });
       syncArtistFilterValue();
       updateArtistsButtonState();
@@ -3618,7 +3619,7 @@ function updateResetButtonState() {
   const filtersActive = Boolean(
     document.getElementById('search').value.trim() ||
     document.getElementById('sort').value ||
-    activePerformers.size ||
+    activeArrangements.size ||
     document.getElementById('lvl').value ||
     activeTags.size
   );
@@ -3636,8 +3637,8 @@ function render() {
   resetAlphabetNavigation();
 
   let filtered = exercises.filter(e =>
-    (!q  || normalizeSearchText(e.nazwa).includes(q) || normalizeSearchText(e.wykonawca).includes(q) || normalizeSearchText(e.opis).includes(q)) &&
-    (activePerformers.size === 0 || activePerformers.has(e.wykonawca)) &&
+    (!q  || normalizeSearchText(e.nazwa).includes(q) || normalizeSearchText(e.rodzaj).includes(q) || normalizeSearchText(e.opis).includes(q)) &&
+    (activeArrangements.size === 0 || activeArrangements.has(e.rodzaj)) &&
     (!lv || e.poziom === lv) &&
     (activeTags.size === 0 || [...activeTags].every(t => e.tagi.includes(t))) &&
     (sv !== 'fav' || favorites.has(e.id))
@@ -3647,16 +3648,16 @@ function render() {
   if (sv === '') filtered.sort((a,b) => Number(isNewEntry(b.data)) - Number(isNewEntry(a.data)) || a.nazwa.localeCompare(b.nazwa,'pl'));
   else if (sv === 'song_az' || sv === 'az') filtered.sort((a,b) => a.nazwa.localeCompare(b.nazwa,'pl'));
   else if (sv === 'song_za' || sv === 'za') filtered.sort((a,b) => b.nazwa.localeCompare(a.nazwa,'pl'));
-  else if (sv === 'artist_az') filtered.sort((a,b) => a.wykonawca.localeCompare(b.wykonawca,'pl') || a.nazwa.localeCompare(b.nazwa,'pl'));
-  else if (sv === 'artist_za') filtered.sort((a,b) => b.wykonawca.localeCompare(a.wykonawca,'pl') || a.nazwa.localeCompare(b.nazwa,'pl'));
+  else if (sv === 'arrangement_az') filtered.sort((a,b) => a.rodzaj.localeCompare(b.rodzaj,'pl') || a.nazwa.localeCompare(b.nazwa,'pl'));
+  else if (sv === 'arrangement_za') filtered.sort((a,b) => b.rodzaj.localeCompare(a.rodzaj,'pl') || a.nazwa.localeCompare(b.nazwa,'pl'));
   else if (sv === 'lvl_asc') filtered.sort((a,b) => (lvlOrder[a.poziom]??99)-(lvlOrder[b.poziom]??99));
   else if (sv === 'lvl_desc') filtered.sort((a,b) => (lvlOrder[b.poziom]??99)-(lvlOrder[a.poziom]??99));
 
   const parts = [];
-  const selectedPerformers = [...activePerformers].sort((a, b) => a.localeCompare(b, 'pl'));
-  if (selectedPerformers.length === 1) parts.push(selectedPerformers[0]);
-  else if (selectedPerformers.length > 1 && selectedPerformers.length <= 3) parts.push(selectedPerformers.join(', '));
-  else if (selectedPerformers.length > 3) parts.push(`${selectedPerformers.length} wykonawców`);
+  const selectedArrangements = [...activeArrangements].sort((a, b) => a.localeCompare(b, 'pl'));
+  if (selectedArrangements.length === 1) parts.push(selectedArrangements[0]);
+  else if (selectedArrangements.length > 1 && selectedArrangements.length <= 3) parts.push(selectedArrangements.join(', '));
+  else if (selectedArrangements.length > 3) parts.push(`${selectedArrangements.length} rodzajów opracowania`);
   if (lv) parts.push(lv);
   activeTags.forEach(t => parts.push('#'+t));
   const sectionLabel = document.getElementById('section-label');
@@ -3689,13 +3690,13 @@ function render() {
     const ytUrl = e.yt.startsWith('http') ? e.yt : '';
     const ytBtn = ytUrl ? `<button class="card-icon-btn card-icon-youtube" onclick="event.preventDefault();event.stopPropagation();window.open('${ytUrl}','_blank');" aria-label="Otwórz film na YouTube"><span class="youtube-play-triangle" aria-hidden="true"></span></button>` : '';
 
-    const sortByArtist = sv === 'artist_az' || sv === 'artist_za';
-    const tytul = sortByArtist && e.wykonawca ? `${e.wykonawca} - ${e.nazwa}` : (e.wykonawca ? `${e.nazwa} - ${e.wykonawca}` : e.nazwa);
+    const tytul = e.nazwa;
     const desc  = e.opis ? `<div class="card-desc">${e.opis}</div>` : '';
     const starsHtml = difficultyStars(e.poziom);
     const newTag = isNewEntry(e.data) ? '<span class="card-tag card-tag-new">NEW!</span>' : '';
     const regularTags = e.tagi.map(t=>`<span class="card-tag">${t}</span>`).join('');
     const tagsDiv = (newTag || regularTags) ? `<div class="card-tags">${newTag}${regularTags}</div>` : '';
+    const arrangementBadge = e.rodzaj ? `<div class="card-arrangement"><span class="card-arrangement-badge">${e.rodzaj}</span></div>` : '';
 
     return `
       <a class="card" data-nav-letter="${normalizeSearchText(e.nazwa).charAt(0)}" data-nav-name="${encodeURIComponent(e.nazwa)}" href="${e.link}" target="_blank" rel="noopener" onclick="return handleCardClick(event,${e.id})" style="position:relative;">
@@ -3704,6 +3705,7 @@ function render() {
         <div class="card-body">
           <div class="card-title">${tytul}</div>
           ${desc}
+          ${arrangementBadge}
           ${tagsDiv}
         </div>
       </a>`;
@@ -3737,81 +3739,67 @@ function toggleTag(tag, btn) {
 
 function syncArtistFilterValue() {
   const legacyInput = document.getElementById('kat');
-  if (legacyInput) legacyInput.value = [...activePerformers].join('||');
+  if (legacyInput) legacyInput.value = [...activeArrangements].join('||');
 }
 
 function updateArtistsButtonState() {
   const button = document.getElementById('artists-btn');
   const label = document.getElementById('artists-btn-label');
   if (!button || !label) return;
-  const selected = [...activePerformers].sort((a, b) => a.localeCompare(b, 'pl'));
-  label.textContent = selected.length === 0 ? 'Wybierz wykonawcę' : selected.length === 1 ? selected[0] : `${selected.length} wykonawców`;
+  const selected = [...activeArrangements].sort((a, b) => a.localeCompare(b, 'pl'));
+  const arrangementWord = selected.length >= 2 && selected.length <= 4 ? 'rodzaje' : 'rodzajów';
+  label.textContent = selected.length === 0 ? 'Wybierz rodzaj opracowania' : selected.length === 1 ? selected[0] : `${selected.length} ${arrangementWord}`;
   button.classList.toggle('active', selected.length > 0);
-  button.title = selected.length ? `Wybrano: ${selected.join(', ')}` : 'Wybierz jednego lub kilku wykonawców';
+  button.title = selected.length ? `Wybrano: ${selected.join(', ')}` : 'Wybierz jeden lub kilka rodzajów opracowania';
 }
 
 function renderArtistChoices() {
   const container = document.getElementById('artists-choices');
   if (!container) return;
   const query = normalizeSearchText(document.getElementById('artists-search')?.value || '');
-  const available = [...performerCounts.entries()]
-    .filter(([, count]) => showSinglePerformers || count >= 2)
-    .filter(([performer]) => !query || normalizeSearchText(performer).includes(query))
+  const available = [...arrangementCounts.entries()]
+    .filter(([arrangement]) => !query || normalizeSearchText(arrangement).includes(query))
     .sort(([a], [b]) => a.localeCompare(b, 'pl'));
   container.innerHTML = '';
   if (!available.length) {
     const empty = document.createElement('div');
     empty.className = 'artists-empty';
-    empty.textContent = 'Nie znaleziono wykonawców.';
+    empty.textContent = 'Nie znaleziono rodzajów opracowania.';
     container.appendChild(empty);
     return;
   }
-  available.forEach(([performer, count]) => {
+  available.forEach(([arrangement, count]) => {
     const button = document.createElement('button');
-    const selected = activePerformers.has(performer);
+    const selected = activeArrangements.has(arrangement);
     button.type = 'button';
     button.className = `artist-choice${selected ? ' active' : ''}`;
     button.setAttribute('aria-pressed', String(selected));
     const name = document.createElement('span');
     name.className = 'artist-choice-name';
-    name.textContent = performer;
+    name.textContent = arrangement;
     const amount = document.createElement('span');
     amount.className = 'artist-choice-count';
-    amount.textContent = performerRiffCountLabel(count);
+    amount.textContent = arrangementCountLabel(count);
     button.append(name, amount);
-    button.addEventListener('click', () => togglePerformer(performer, button));
+    button.addEventListener('click', () => togglePerformer(arrangement, button));
     container.appendChild(button);
   });
 }
 
-function togglePerformer(performer, button) {
-  if (activePerformers.has(performer)) activePerformers.delete(performer);
-  else activePerformers.add(performer);
-  const selected = activePerformers.has(performer);
+function togglePerformer(arrangement, button) {
+  if (activeArrangements.has(arrangement)) activeArrangements.delete(arrangement);
+  else activeArrangements.add(arrangement);
+  const selected = activeArrangements.has(arrangement);
   button.classList.toggle('active', selected);
   button.setAttribute('aria-pressed', String(selected));
   syncArtistFilterValue();
   updateArtistsButtonState();
 }
 
-function setShowSinglePerformers(checked) {
-  showSinglePerformers = Boolean(checked);
-  localStorage.setItem('so_show_single_performers', showSinglePerformers ? '1' : '0');
-  if (!showSinglePerformers) {
-    activePerformers.forEach(performer => {
-      if ((performerCounts.get(performer) || 0) < 2) activePerformers.delete(performer);
-    });
-    syncArtistFilterValue();
-    updateArtistsButtonState();
-  }
-  renderArtistChoices();
-}
-
 function openArtistsPanel() {
   const dialog = document.getElementById('artists-dropdown');
   dialogReturnFocus.set('artists-dropdown', document.activeElement);
   document.getElementById('artists-search').value = '';
-  document.getElementById('artists-show-single').checked = showSinglePerformers;
   renderArtistChoices();
   dialog.classList.add('open');
   dialog.setAttribute('aria-hidden', 'false');
@@ -3831,7 +3819,7 @@ function closeArtistsPanel() {
 }
 
 function clearPerformers() {
-  activePerformers.clear();
+  activeArrangements.clear();
   syncArtistFilterValue();
   updateArtistsButtonState();
   renderArtistChoices();
@@ -3931,7 +3919,7 @@ function resetFilters() {
   document.getElementById('kat').value = '';
   document.getElementById('lvl').value = '';
   document.getElementById('sort').value = '';
-  activePerformers.clear();
+  activeArrangements.clear();
   syncArtistFilterValue();
   updateArtistsButtonState();
   activeTags.clear();
