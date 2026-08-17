@@ -2038,7 +2038,7 @@ function coverUrlCandidates(entry) {
   ].filter(Boolean))];
   return names.flatMap(name => {
     const base = `${REPO_BASE}/okladki/${encodeURIComponent(name)}`;
-    return [`${base}.png`, `${base}.jpg`];
+    return [`${base}.webp`, `${base}.png`, `${base}.jpg`];
   });
 }
 
