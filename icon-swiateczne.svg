@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Świąteczne Opracowania</title>
+  <rect width="512" height="512" rx="104" fill="#0b3d29"/>
+  <path d="M0 358C102 310 200 410 322 350c80-39 137-31 190-4v166H0Z" fill="#8d1726"/>
+  <circle cx="256" cy="250" r="156" fill="#10261c" stroke="#e6c15a" stroke-width="18"/>
+  <g fill="none" stroke="#f7fbff" stroke-width="19" stroke-linecap="round">
+    <path d="M256 120v264M142 186l228 132M142 318l228-132"/>
+    <path d="m256 120-24 34m24-34 24 34m-24 230-24-34m24 34 24-34M142 186l42 4m-42-4 17 38m211 94-42-4m42 4-17-38M142 318l17-38m-17 38 42-4m186-128-17 38m17-38-42 4"/>
+  </g>
+  <circle cx="256" cy="250" r="25" fill="#e6c15a"/>
+</svg>

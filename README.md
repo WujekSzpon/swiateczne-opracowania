@@ -6,9 +6,10 @@ Repozytorium przygotowane pod interaktywny konspekt HTML ze świątecznymi oprac
 
 - `KONSPEKT - ŚWIĄTECZNE.xlsx` — baza materiałów,
 - `okladki/` — okładki opracowań,
-- `branding/` — przyszłe grafiki produktu i logo,
-- `icons/` — przyszłe ikony aplikacji,
-- `data/` — przyszłe dodatkowe pliki danych,
-- `index.html` — zostanie dodany po wyborze świątecznej wersji wyglądu.
+- `branding/` — logo marki używane w konspekcie,
+- `icon-swiateczne.svg` — tymczasowa ikona aplikacji,
+- `manifest-swiateczne.webmanifest` — ustawienia instalowanej aplikacji,
+- `sw-swiateczne.js` — obsługa trybu aplikacji i pamięci podręcznej,
+- `index.html` — kompletny konspekt HTML.
 
-Na obecnym etapie repozytorium zawiera bazę i gotowe okładki. Finalny konspekt zostanie zbudowany po zatwierdzeniu kierunku wizualnego.
+Konspekt wykorzystuje świąteczną paletę kolorów, animowany śnieg, dekoracyjne nagłówki, kolorowe obramowania kart oraz sezonowy wygląd powiadomień.

@@ -1,0 +1,27 @@
+{
+  "id": "/swiateczne-opracowania/",
+  "name": "Świąteczne Opracowania",
+  "short_name": "Świąteczne",
+  "description": "Interaktywny konspekt Świąteczne Opracowania od Wujka Szpona.",
+  "lang": "pl",
+  "start_url": "/swiateczne-opracowania/",
+  "scope": "/swiateczne-opracowania/",
+  "display": "standalone",
+  "background_color": "#07140e",
+  "theme_color": "#07140e",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://wujekszpon.github.io/swiateczne-opracowania/manifest-swiateczne.webmanifest",
+      "id": "https://wujekszpon.github.io/swiateczne-opracowania/"
+    }
+  ],
+  "icons": [
+    {
+      "src": "./icon-swiateczne.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
