@@ -523,11 +523,14 @@ body.cards-mini .card-title{font-size:calc(12px * var(--card-title-scale));margi
 .card-preview-thumb .thumb-icon{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:52px;}
 .card-preview-thumb .difficulty-stars{font-size:clamp(34px,11.5cqw,58px);}
 .card-preview-actions{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);background:#101010;}
+    .card-preview-right{justify-self:end;display:flex;align-items:center;gap:12px;}
 .card-preview-round{width:46px;height:46px;display:inline-flex;align-items:center;justify-content:center;border:3px solid currentColor;border-radius:50%;background:#0a0a0a;color:var(--card-icon-light);font-size:25px;cursor:pointer;box-shadow:0 0 8px rgba(211,211,211,.22);}
 .card-preview-favorite{justify-self:start;}
 .card-preview-favorite.is-favorite{color:#ed1160;background:rgba(237,17,96,.13);box-shadow:0 0 12px rgba(237,17,96,.48);}
-.card-preview-youtube{justify-self:end;}
-.card-preview-youtube[hidden]{display:block;visibility:hidden;pointer-events:none;}
+.card-preview-copy{justify-self:auto;}
+.card-preview-copy.is-copied{color:#00ff9c;box-shadow:0 0 14px rgba(0,255,156,.48);}
+.card-preview-youtube{justify-self:auto;}
+.card-preview-youtube[hidden]{display:none;}
 .card-preview-material{min-height:46px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 17px;border:2px solid var(--accent);border-radius:999px;background:rgba(255,204,0,.1);color:var(--accent);font:800 11px 'Open Sans',sans-serif;cursor:pointer;box-shadow:0 0 11px rgba(255,204,0,.3),inset 0 0 8px rgba(255,204,0,.05);}
 .card-preview-material i{font-size:21px;}
 .card-preview-actions button{transition:transform .16s ease,outline-color .16s ease,box-shadow .16s ease;}
@@ -536,7 +539,7 @@ body.cards-mini .card-title{font-size:calc(12px * var(--card-title-scale));margi
 .card-preview-title{color:#fff;font-size:calc(20px * var(--card-title-scale));font-weight:700;line-height:1.35;}
 .card-preview-description{margin-top:9px;color:#bbb;font-size:calc(13px * var(--card-desc-scale));line-height:1.5;}
 .card-preview-tags{display:flex;justify-content:center;flex-wrap:wrap;gap:5px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
-@media(max-width:480px){#card-preview-modal{padding:10px}.card-preview-actions{padding:10px 13px;gap:8px}.card-preview-round{width:42px;height:42px;font-size:23px}.card-preview-material{min-height:42px;padding:0 13px;font-size:10px}.card-preview-content{padding:14px 15px 18px}.card-preview-title{font-size:calc(18px * var(--card-title-scale))}}
+@media(max-width:480px){#card-preview-modal{padding:10px}.card-preview-actions{padding:10px 13px;gap:8px}.card-preview-right{gap:8px}.card-preview-round{width:42px;height:42px;font-size:23px}.card-preview-material{min-height:42px;padding:0 13px;font-size:10px}.card-preview-content{padding:14px 15px 18px}.card-preview-title{font-size:calc(18px * var(--card-title-scale))}}
 @media(prefers-reduced-motion:reduce){#card-preview-panel{animation:none}}
 
 /* NEW ITEMS */
@@ -759,6 +762,7 @@ header,#toolbar-wrap{background:rgba(7,20,14,.96);backdrop-filter:blur(8px);}
       <option value="lvl_asc">Łatwe → Trudne</option>
       <option value="lvl_desc">Trudne → Łatwe</option>
       <option value="fav">♥ Ulubione</option>
+      <option value="new">Tylko nowe</option>
     </select>
     <button class="toolbar-select-button" id="artists-btn" type="button" onclick="openArtistsPanel()" aria-label="Wybierz jeden lub kilka rodzajów opracowania" aria-expanded="false" aria-controls="artists-dropdown"><span id="artists-btn-label">Wybierz rodzaj opracowania</span><i class="ti ti-chevron-down" aria-hidden="true"></i></button>
     <input id="kat" type="hidden" value="">
@@ -838,7 +842,10 @@ header,#toolbar-wrap{background:rgba(7,20,14,.96);backdrop-filter:blur(8px);}
     <div class="card-preview-actions">
       <button class="card-preview-round card-preview-favorite" id="card-preview-favorite" type="button" onclick="togglePreviewFavorite()" aria-label="Dodaj do ulubionych"><i class="ti ti-heart" aria-hidden="true"></i></button>
       <button class="card-preview-material" id="card-preview-material" type="button" onclick="openPreviewMaterial()"><i class="ti ti-folder-open" aria-hidden="true"></i><span>OTWÓRZ MATERIAŁY</span></button>
-      <button class="card-preview-round card-preview-youtube" id="card-preview-youtube" type="button" onclick="openPreviewYoutube()" aria-label="Otwórz film na YouTube"><i class="ti ti-player-play-filled" aria-hidden="true"></i></button>
+      <div class="card-preview-right">
+        <button class="card-preview-round card-preview-copy" id="card-preview-copy" type="button" onclick="copyPreviewMaterialLink()" aria-label="Skopiuj link do opracowania" title="Skopiuj link do opracowania"><i class="ti ti-copy" aria-hidden="true"></i></button>
+        <button class="card-preview-round card-preview-youtube" id="card-preview-youtube" type="button" onclick="openPreviewYoutube()" aria-label="Otwórz film na YouTube"><i class="ti ti-player-play-filled" aria-hidden="true"></i></button>
+      </div>
     </div>
     <div class="card-preview-content">
       <div class="card-preview-title" id="card-preview-title"></div>
@@ -1521,7 +1528,7 @@ let cardSizeAuto = !savedSize;
 let favorites = new Set(JSON.parse(localStorage.getItem('so_favorites') || '[]'));
 
 const POPUP_FREQUENCY_SECONDS = [0, 15, 30, 60, 120, 240];
-const DEFAULT_UI_SETTINGS = { descriptions:false, tags:false, stars:true, thumbnails:true, cardPreview:window.matchMedia('(max-width: 640px)').matches, newItemNotifications:true, autoHideToolbar:false, popupFrequency:4, popupPosition:'bottom', popupSettingsVersion:3, interfaceScale:100, titleScale:100, descriptionScale:100, tagScale:100, toolbarIconScale:100 };
+const DEFAULT_UI_SETTINGS = { descriptions:false, tags:false, stars:true, thumbnails:true, cardPreview:true, cardPreviewDefaultVersion:2, newItemNotifications:true, autoHideToolbar:false, popupFrequency:4, popupPosition:'bottom', popupSettingsVersion:3, interfaceScale:100, titleScale:100, descriptionScale:100, tagScale:100, toolbarIconScale:100 };
 let uiSettings = {...DEFAULT_UI_SETTINGS};
 let popupScheduleTimer;
 let firstPopupPending = true;
@@ -1664,6 +1671,11 @@ function applyUiSettings() {
 function loadUiSettings() {
   try {
     const saved = JSON.parse(localStorage.getItem('so_ui_settings') || '{}');
+    if (saved.cardPreviewDefaultVersion !== 2) {
+      saved.cardPreview = true;
+      saved.cardPreviewDefaultVersion = 2;
+      localStorage.setItem('so_ui_settings', JSON.stringify(saved));
+    }
     if (!Number.isInteger(saved.popupFrequency)) saved.popupFrequency = saved.notifications === false ? 0 : DEFAULT_UI_SETTINGS.popupFrequency;
     if (saved.popupSettingsVersion !== 3) {
       const oldMinutes = Math.max(0, Math.min(4, Number(saved.popupFrequency) || 0));
@@ -2097,8 +2109,50 @@ function openCardPreview(id) {
   const hasYoutube = /^https?:\/\//i.test(entry.yt || '');
   youtube.hidden = !hasYoutube;
   youtube.dataset.url = hasYoutube ? entry.yt : '';
+  document.querySelector('#card-preview-modal .card-preview-actions')?.classList.toggle('has-youtube', hasYoutube);
+  const copyButton = document.getElementById('card-preview-copy');
+  copyButton.classList.remove('is-copied');
+  copyButton.innerHTML = '<i class="ti ti-copy" aria-hidden="true"></i>';
+  copyButton.setAttribute('aria-label', 'Skopiuj link do opracowania');
   openAccessibleDialog('card-preview-modal', 'card-preview-panel');
   requestAnimationFrame(() => selectPreviewAction(document.getElementById('card-preview-material')));
+}
+
+async function copyTextForPreview(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  const helper = document.createElement('textarea');
+  helper.value = text;
+  helper.setAttribute('readonly', '');
+  helper.style.position = 'fixed';
+  helper.style.opacity = '0';
+  document.body.appendChild(helper);
+  helper.select();
+  const copied = document.execCommand('copy');
+  helper.remove();
+  if (!copied) throw new Error('Nie udało się skopiować linku.');
+}
+
+async function copyPreviewMaterialLink() {
+  const entry = previewEntry();
+  if (!entry || !/^https?:\/\//i.test(entry.link || '')) return;
+  const button = document.getElementById('card-preview-copy');
+  try {
+    await copyTextForPreview(entry.link);
+    button.classList.add('is-copied');
+    button.innerHTML = '<i class="ti ti-check" aria-hidden="true"></i>';
+    button.setAttribute('aria-label', 'Link skopiowany');
+    setTimeout(() => {
+      if (!button.isConnected) return;
+      button.classList.remove('is-copied');
+      button.innerHTML = '<i class="ti ti-copy" aria-hidden="true"></i>';
+      button.setAttribute('aria-label', 'Skopiuj link do opracowania');
+    }, 1800);
+  } catch (_) {
+    button.setAttribute('aria-label', 'Nie udało się skopiować linku');
+  }
 }
 
 function closeCardPreview() {
@@ -2171,8 +2225,12 @@ const NEW_ITEMS_INITIALIZED_KEY = 'so_new_items_initialized_v1';
 const NEW_ITEMS_SEEN_KEY = 'so_new_items_seen_v1';
 let pendingNewItems = [];
 
+function legacyNewItemKey(entry) {
+  return `legacy:${normalizeSearchText(entry.nazwa)}|${normalizeSearchText(entry.wykonawca)}|${normalizeSearchText(entry.okladka)}`;
+}
+
 function stableNewItemKey(entry) {
-  return `arrangement:${normalizeSearchText(entry.nazwa)}|${normalizeSearchText(entry.wykonawca)}|${normalizeSearchText(entry.link)}|${normalizeSearchText(entry.poziom)}`;
+  return `id:${entry.id}`;
 }
 
 function readSeenNewItemKeys() {
@@ -2205,7 +2263,7 @@ function openNewItemsModal(items) {
   pendingNewItems = [...items];
   const list = document.getElementById('new-items-list');
   list.innerHTML = items.map(entry => `
-    <button class="new-item-card" type="button" onclick="openCardPreviewFromNew(${entry.id})" aria-label="Pokaż podgląd: ${escapeExportHtml(entry.nazwa)}">
+    <button class="new-item-card" type="button" onclick="openCardPreviewFromNew('${entry.id}')" aria-label="Pokaż podgląd: ${escapeExportHtml(entry.nazwa)}">
       <div class="new-item-cover">${newItemCoverHtml(entry)}${difficultyStars(entry.poziom)}</div>
       <div class="new-item-copy"><div class="new-item-title">${escapeExportHtml(entry.wykonawca ? `${entry.nazwa} - ${entry.wykonawca}` : entry.nazwa)}</div></div>
     </button>`).join('');
@@ -2230,6 +2288,14 @@ function checkForNewItems() {
     return;
   }
   const seen = readSeenNewItemKeys();
+  let migratedSeenKeys = false;
+  exercises.forEach(entry => {
+    if (seen.has(legacyNewItemKey(entry)) && !seen.has(stableNewItemKey(entry))) {
+      seen.add(stableNewItemKey(entry));
+      migratedSeenKeys = true;
+    }
+  });
+  if (migratedSeenKeys) writeSeenNewItemKeys(seen);
   const unseen = exercises
     .filter(entry => isNewEntry(entry.data) && !seen.has(stableNewItemKey(entry)))
     .sort((a, b) => (parseExcelDate(b.data)?.getTime() || 0) - (parseExcelDate(a.data)?.getTime() || 0));
@@ -2421,25 +2487,32 @@ function restoreFavoritesFromSettings(data) {
   if (Array.isArray(data.favoriteItems)) {
     data.favoriteItems.forEach(saved => {
       if (!saved || typeof saved !== 'object') return;
-      const savedTitle = normalize(saved.title);
-      const savedPerformer = normalize(saved.performer);
-      const savedLink = normalize(saved.link);
-      const savedLevel = normalize(saved.level);
-      const match = exercises.find(entry =>
-        normalize(entry.nazwa) === savedTitle &&
-        (!savedPerformer || normalize(entry.wykonawca) === savedPerformer) &&
-        (!savedLink || normalize(entry.link) === savedLink) &&
-        (!savedLevel || normalize(entry.poziom) === savedLevel)
-      );
+      const savedId = String(saved.id || '').trim().toUpperCase();
+      let match = savedId ? exercises.find(entry => entry.id === savedId) : null;
+      if (!match) {
+        const savedTitle = normalize(saved.title);
+        const savedPerformer = normalize(saved.performer);
+        match = exercises.find(entry =>
+          normalize(entry.nazwa) === savedTitle &&
+          (!savedPerformer || normalize(entry.wykonawca) === savedPerformer)
+        );
+      }
       if (match) restoredIds.add(match.id);
     });
   }
 
   if (restoredIds.size === 0 && Array.isArray(data.favorites)) {
-    data.favorites.forEach(id => {
-      const numericId = Number(id);
-      if (Number.isInteger(numericId) && exercises.some(entry => entry.id === numericId)) {
-        restoredIds.add(numericId);
+    data.favorites.forEach(value => {
+      const stableId = String(value || '').trim().toUpperCase();
+      const direct = exercises.find(entry => entry.id === stableId);
+      if (direct) {
+        restoredIds.add(direct.id);
+        return;
+      }
+      const legacyId = Number(value);
+      if (Number.isInteger(legacyId)) {
+        const legacyMatch = exercises.find(entry => entry.legacyId === legacyId);
+        if (legacyMatch) restoredIds.add(legacyMatch.id);
       }
     });
   }
@@ -2451,7 +2524,7 @@ function restoreFavoritesFromSettings(data) {
 
 function exportSettings() {
   const data = {
-    version: 2,
+    version: 3,
     product: 'Świąteczne Opracowania',
     exportedAt: new Date().toISOString(),
     uiSettings,
@@ -3453,17 +3526,24 @@ function excelText(row, names) {
 function validateExcelRows(rows) {
   const issues = [];
   const duplicates = new Map();
+  const ids = new Map();
   const allowedLevels = new Set(['POCZĄTKUJĄCY', 'PROSTY', 'ŚREDNI', 'TRUDNY', 'EXPERT']);
   const addIssue = (type, row, message) => issues.push({type, row, message});
 
   rows.forEach((row, index) => {
     const rowNumber = index + 2;
+    const id = excelText(row, ['ID']).toUpperCase();
     const title = excelText(row, ['UTWÓR']);
     const arrangement = excelText(row, ['RODZAJ OPRACOWANIA', 'Rodzaj opracowania']);
     const link = excelText(row, ['LINK DO DYSKU', 'Link do dysku', 'LINK']);
     const youtube = excelText(row, ['YOUTUBE', 'YT']);
     const level = excelText(row, ['Poziom', 'POZIOM']).toUpperCase();
     const dateValue = excelCell(row, ['DATA', 'Data']);
+
+    if (!id) addIssue('error', rowNumber, 'Brak trwałego identyfikatora ID.');
+    else if (!/^[A-Z]{2,5}-\d{4}$/.test(id)) addIssue('error', rowNumber, `Nieprawidłowy format ID: „${id}”. Użyj PREFIX-0001.`);
+    else if (ids.has(id)) addIssue('error', rowNumber, `Powtórzone ID z wiersza ${ids.get(id)}: ${id}.`);
+    else ids.set(id, rowNumber);
 
     if (!title) addIssue('error', rowNumber, 'Brak tytułu utworu. Ten wiersz nie zostanie wyświetlony.');
     if (!arrangement) addIssue('warning', rowNumber, 'Brak rodzaju opracowania.');
@@ -3584,6 +3664,32 @@ function restoreSavedPlace() {
   }));
 }
 
+function normalizeMaterialId(value, prefix, legacyIndex) {
+  const id = String(value ?? '').trim().toUpperCase();
+  return /^[A-Z]{2,5}-\d{4}$/.test(id) ? id : `${prefix}-${String(legacyIndex + 1).padStart(4, '0')}`;
+}
+
+function migrateLegacyFavorites() {
+  const migrated = new Set();
+  favorites.forEach(value => {
+    const stableId = String(value ?? '').trim().toUpperCase();
+    const direct = exercises.find(entry => entry.id === stableId);
+    if (direct) {
+      migrated.add(direct.id);
+      return;
+    }
+    const legacyId = Number(value);
+    if (Number.isInteger(legacyId)) {
+      const legacyMatch = exercises.find(entry => entry.legacyId === legacyId);
+      if (legacyMatch) migrated.add(legacyMatch.id);
+    }
+  });
+  if (migrated.size !== favorites.size || [...migrated].some(id => !favorites.has(id))) {
+    favorites = migrated;
+    localStorage.setItem('so_favorites', JSON.stringify([...favorites]));
+  }
+}
+
 function loadExcel() {
   showLoadingState();
   fetchExcelBuffer()
@@ -3597,7 +3703,8 @@ function loadExcel() {
       const cellText = value => String(value ?? '').trim();
 
       exercises = rows.map((r, i) => ({
-        id: i,
+        id: normalizeMaterialId(r['ID'], 'SWI', i),
+        legacyId: i,
         nazwa:  cellText(r['UTWÓR']),
         wykonawca: cellText(r['WYKONAWCA']),
         yt:     cellText(r['YOUTUBE'] || r['YT']),
@@ -3609,6 +3716,8 @@ function loadExcel() {
         rodzaj: cellText(r['RODZAJ OPRACOWANIA'] || r['Rodzaj opracowania']),
         okladka:cellText(r['OKŁADKA (NAZWA PLIKU)']),
       })).filter(e => e.nazwa);
+
+      migrateLegacyFavorites();
 
       // Populate rodzaje opracowania
       arrangementCounts = exercises.reduce((counts, exercise) => {
@@ -3702,7 +3811,8 @@ function render() {
     (activeArrangements.size === 0 || activeArrangements.has(e.rodzaj)) &&
     (!lv || e.poziom === lv) &&
     (activeTags.size === 0 || [...activeTags].every(t => e.tagi.includes(t))) &&
-    (sv !== 'fav' || favorites.has(e.id))
+    (sv !== 'fav' || favorites.has(e.id)) &&
+    (sv !== 'new' || isNewEntry(e.data))
   );
 
   const lvlOrder = {'POCZĄTKUJĄCY':0,'PROSTY':1,'ŚREDNI':2,'TRUDNY':3,'EXPERT':4};
@@ -3746,7 +3856,7 @@ function render() {
     const thumb = `<img ${coverImageAttributes(e, 'block')} alt="${e.nazwa}" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;"><span class="thumb-icon" style="display:none">🎸</span>`;
 
     const isFav = favorites.has(e.id);
-    const favBtn = `<button class="card-icon-btn card-icon-favorite${isFav ? ' is-favorite' : ''}" data-favorite-id="${e.id}" onclick="event.preventDefault();event.stopPropagation();toggleFav(${e.id},this);" aria-label="${isFav ? 'Usuń z ulubionych' : 'Dodaj do ulubionych'}" aria-pressed="${isFav}"><i class="ti ${isFav ? 'ti-heart-filled' : 'ti-heart'}" aria-hidden="true"></i></button>`;
+    const favBtn = `<button class="card-icon-btn card-icon-favorite${isFav ? ' is-favorite' : ''}" data-favorite-id="${e.id}" onclick="event.preventDefault();event.stopPropagation();toggleFav('${e.id}',this);" aria-label="${isFav ? 'Usuń z ulubionych' : 'Dodaj do ulubionych'}" aria-pressed="${isFav}"><i class="ti ${isFav ? 'ti-heart-filled' : 'ti-heart'}" aria-hidden="true"></i></button>`;
 
     const ytUrl = e.yt.startsWith('http') ? e.yt : '';
     const ytBtn = ytUrl ? `<button class="card-icon-btn card-icon-youtube" onclick="event.preventDefault();event.stopPropagation();window.open('${ytUrl}','_blank');" aria-label="Otwórz film na YouTube"><span class="youtube-play-triangle" aria-hidden="true"></span></button>` : '';
@@ -3761,7 +3871,7 @@ function render() {
     const arrangementStyle = e.rodzaj ? `--arrangement-color:${arrangementColor(e.rodzaj)};--arrangement-tag-color:${arrangementTagColor(e.rodzaj)};` : '';
 
     return `
-      <a class="card${e.rodzaj ? ' arrangement-card' : ''}" data-nav-letter="${normalizeSearchText(e.nazwa).charAt(0)}" data-nav-name="${encodeURIComponent(e.nazwa)}" href="${e.link}" target="_blank" rel="noopener" onclick="return handleCardClick(event,${e.id})" style="position:relative;${arrangementStyle}">
+      <a class="card${e.rodzaj ? ' arrangement-card' : ''}" data-nav-letter="${normalizeSearchText(e.nazwa).charAt(0)}" data-nav-name="${encodeURIComponent(e.nazwa)}" href="${e.link}" target="_blank" rel="noopener" onclick="return handleCardClick(event,'${e.id}')" style="position:relative;${arrangementStyle}">
         ${favBtn}${ytBtn}
         <div class="thumb ${starsHtml ? 'has-stars' : ''}" style="background:#1a1a2e;">${thumb}${starsHtml}</div>
         <div class="card-body">
