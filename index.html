@@ -562,12 +562,13 @@ body.cards-mini .card-title{font-size:calc(12px * var(--card-title-scale));margi
 #new-items-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.86);backdrop-filter:blur(4px);}
 #new-items-panel{position:relative;width:min(780px,100%);max-height:calc(100dvh - 36px);overflow-y:auto;background:linear-gradient(145deg,#18120d 0%,#111 42%,#160b16 100%);border:2px solid rgba(255,204,0,.58);border-radius:17px;padding:20px;box-shadow:0 0 24px rgba(255,204,0,.18),0 24px 80px rgba(0,0,0,.82);animation:new-items-in .34s cubic-bezier(.18,.9,.25,1.15);outline:none;}
 @keyframes new-items-in{from{opacity:0;transform:translateY(18px) scale(.93)}to{opacity:1;transform:translateY(0) scale(1)}}
-.new-items-header{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:15px;}
+.new-items-header{position:relative;display:block;min-height:39px;padding:0 48px;margin-bottom:15px;text-align:center;}
+.new-items-header>div{width:100%;}
 .new-items-heading{font:800 23px 'Oswald',sans-serif;letter-spacing:.035em;color:var(--accent);text-shadow:0 0 12px rgba(255,204,0,.38);}
-.new-items-subtitle{margin-top:4px;color:#ccc;font-size:12px;line-height:1.5;}
-.new-items-close{flex:0 0 auto;width:39px;height:39px;border:1px solid #555;border-radius:50%;background:#111;color:#fff;font-size:20px;cursor:pointer;}
-.new-items-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;}
-.new-item-card{display:block;width:100%;overflow:hidden;padding:0;border:2px solid #3d3430;border-radius:13px;background:#171717;color:#fff;text-align:left;cursor:pointer;box-shadow:0 7px 22px rgba(0,0,0,.42);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;}
+.new-items-subtitle{margin:4px auto 0;max-width:620px;color:#ccc;font-size:12px;line-height:1.5;text-align:center;}
+.new-items-close{position:absolute;top:0;right:0;width:39px;height:39px;border:1px solid #555;border-radius:50%;background:#111;color:#fff;font-size:20px;cursor:pointer;}
+.new-items-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;justify-content:center;}
+.new-item-card{display:block;width:100%;overflow:hidden;padding:0;border:2px solid #3d3430;border-radius:13px;background:#171717;color:#fff;text-align:center;cursor:pointer;box-shadow:0 7px 22px rgba(0,0,0,.42);transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;}
 .new-item-card:hover,.new-item-card:focus-visible{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 0 17px rgba(255,204,0,.28),0 10px 26px rgba(0,0,0,.48);outline:none;}
 .new-item-cover{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#0d0d0d;container-type:inline-size;}
 .new-item-cover::after{content:'';position:absolute;z-index:1;left:0;right:0;bottom:0;height:20cqw;background:linear-gradient(to top,#090909 0%,rgba(9,9,9,.92) 30%,rgba(9,9,9,.48) 68%,transparent 100%);}
@@ -4617,3 +4618,4 @@ document.addEventListener('DOMContentLoaded', updatePwaInstallUi);
 </script>
 </body>
 </html>
+
