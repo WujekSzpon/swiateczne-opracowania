@@ -1835,7 +1835,7 @@ function openReviewFromPromotion(event) {
 function configurePromotionLink(anchor, promotion) {
   anchor.onclick = null;
   if (isReviewPromotionLink(promotion.link)) {
-    anchor.href = '#dodaj-opinie';
+    anchor.href = 'https://wujekszpon.github.io/opinie-o-produktach/?produkt=swiateczne-opracowania';
     anchor.removeAttribute('target');
     anchor.removeAttribute('rel');
     anchor.onclick = openReviewFromPromotion;
@@ -2641,10 +2641,8 @@ function preloadReviewAvatars() {
 
 function sendFeedback() {
   closeOptions();
-  reviewFormOpenedAt = Date.now();
-  openAccessibleDialog('review-modal', 'review-panel');
-  setReviewRating(5);
-  requestAnimationFrame(()=>previewReviewPng(false));
+  // Wspólny formularz z potwierdzeniem odbioru i wybranym produktem.
+  window.open('https://wujekszpon.github.io/opinie-o-produktach/?produkt=swiateczne-opracowania', '_blank', 'noopener');
 }
 
 function openContactForm() {
