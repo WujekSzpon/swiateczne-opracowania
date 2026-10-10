@@ -1,4 +1,4 @@
-const CACHE_NAME = 'swiateczne-opracowania-v5';
+const CACHE_NAME = 'swiateczne-opracowania-v6';
 const APP_SHELL = [
   './',
   './manifest-swiateczne.webmanifest',
