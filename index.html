@@ -748,6 +748,15 @@ header,#toolbar-wrap{background:rgba(7,20,14,.96);backdrop-filter:blur(8px);}
 .card-preview-actions.is-christmas-app #card-preview-favorite{grid-column:1/-1;justify-self:start;}
 .card-preview-actions.is-christmas-app .card-preview-material{padding:0 8px;font-size:10px;}
 }
+
+/* Równe przyciski aplikacji, również przy zaznaczeniu klawiaturą. */
+.card-preview-actions.is-christmas-app{grid-template-columns:minmax(44px,1fr) repeat(2,minmax(0,180px)) minmax(0,1fr);}
+.card-preview-actions.is-christmas-app .card-preview-material{box-sizing:border-box;width:100%;height:48px;min-height:48px;padding:0 8px;font-size:11px;line-height:1.2;}
+.card-preview-actions.is-christmas-app .card-preview-material.preview-keyboard-selected{transform:none;}
+@media(max-width:540px){
+.card-preview-actions.is-christmas-app{grid-template-columns:repeat(2,minmax(0,1fr));}
+.card-preview-actions.is-christmas-app .card-preview-material{height:48px;min-height:48px;font-size:10px;}
+}
 </style>
 </head>
 <body>
