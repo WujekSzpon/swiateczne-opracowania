@@ -739,6 +739,15 @@ header,#toolbar-wrap{background:rgba(7,20,14,.96);backdrop-filter:blur(8px);}
   body.print-catalog .difficulty-stars{display:block !important;}
 }
 /* ===== TESTOWY EKSPORT KATALOGU PDF — koniec ===== */
+
+.card-preview-actions.is-christmas-app{grid-template-columns:1fr auto auto 1fr;}
+.card-preview-actions.is-christmas-app .card-preview-right{display:none;}
+#card-preview-password[hidden]{display:none;}
+@media(max-width:540px){
+.card-preview-actions.is-christmas-app{grid-template-columns:1fr 1fr;gap:10px;}
+.card-preview-actions.is-christmas-app #card-preview-favorite{grid-column:1/-1;justify-self:start;}
+.card-preview-actions.is-christmas-app .card-preview-material{padding:0 8px;font-size:10px;}
+}
 </style>
 </head>
 <body>
@@ -862,6 +871,7 @@ header,#toolbar-wrap{background:rgba(7,20,14,.96);backdrop-filter:blur(8px);}
     <div class="card-preview-actions">
       <button class="card-preview-round card-preview-favorite" id="card-preview-favorite" type="button" onclick="togglePreviewFavorite()" aria-label="Dodaj do ulubionych"><i class="ti ti-heart" aria-hidden="true"></i></button>
       <button class="card-preview-material" id="card-preview-material" type="button" onclick="openPreviewMaterial()"><i class="ti ti-folder-open" aria-hidden="true"></i><span>OTWÓRZ MATERIAŁY</span></button>
+      <button class="card-preview-material" id="card-preview-password" type="button" onclick="copyChristmasAppPassword()" hidden><i class="ti ti-copy" aria-hidden="true"></i><span>SKOPIUJ HASŁO</span></button>
       <div class="card-preview-right">
         <button class="card-preview-round card-preview-copy" id="card-preview-copy" type="button" onclick="copyPreviewMaterialLink()" aria-label="Skopiuj link do opracowania" title="Skopiuj link do opracowania"><i class="ti ti-copy" aria-hidden="true"></i></button>
         <button class="card-preview-round card-preview-youtube" id="card-preview-youtube" type="button" onclick="openPreviewYoutube()" aria-label="Otwórz film na YouTube"><i class="ti ti-player-play-filled" aria-hidden="true"></i></button>
@@ -2138,12 +2148,35 @@ function openCardPreview(id) {
   youtube.hidden = !hasYoutube;
   youtube.dataset.url = hasYoutube ? entry.yt : '';
   document.querySelector('#card-preview-modal .card-preview-actions')?.classList.toggle('has-youtube', hasYoutube);
+  const isApp = isChristmasApp(entry);
+  document.querySelector('#card-preview-modal .card-preview-actions').classList.toggle('is-christmas-app', isApp);
+  document.querySelector('#card-preview-material span').textContent = isApp ? 'OTWÓRZ APLIKACJĘ' : 'OTWÓRZ MATERIAŁY';
+  const passwordButton = document.getElementById('card-preview-password');
+  passwordButton.hidden = !isApp;
+  passwordButton.querySelector('span').textContent = 'SKOPIUJ HASŁO';
+  passwordButton.disabled = false;
   const copyButton = document.getElementById('card-preview-copy');
   copyButton.classList.remove('is-copied');
   copyButton.innerHTML = '<i class="ti ti-copy" aria-hidden="true"></i>';
   copyButton.setAttribute('aria-label', 'Skopiuj link do opracowania');
   openAccessibleDialog('card-preview-modal', 'card-preview-panel');
   requestAnimationFrame(() => selectPreviewAction(document.getElementById('card-preview-material')));
+}
+
+
+function isChristmasApp(entry) {
+  try { return new URL(entry?.link || '').hostname === 'gitarowe-swieta-szpon.wujekszpon.chatgpt.site'; }
+  catch (_) { return false; }
+}
+async function copyChristmasAppPassword() {
+  if (!isChristmasApp(previewEntry())) return;
+  const button = document.getElementById('card-preview-password');
+  try {
+    await copyTextForPreview('MerryRiffmas');
+    button.querySelector('span').textContent = 'HASŁO SKOPIOWANE';
+  } catch (_) {
+    button.querySelector('span').textContent = 'SPRÓBUJ PONOWNIE';
+  }
 }
 
 async function copyTextForPreview(text) {
